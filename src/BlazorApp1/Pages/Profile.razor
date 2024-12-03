@@ -1,0 +1,65 @@
+﻿@page "/profile"
+
+@using BlazorApp1.Auth
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using MudBlazor
+
+@inject AuthenticationStateProvider authStateProvider
+
+<MudText Typo="Typo.h5">Профиль Пользователя:</MudText>
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h5">Спасибо, что Авторизовался!</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            @if (currentUser != null)
+            {
+                <MudGrid>
+                    <MudItem xs="12" sm="4" style="text-align: center;">
+                        <img src="https://multi-admin.ru/mediabank_blog/11/258922/1046c5a8cfd1e4022d9e60bd9222692fsnimok-ekrana-2024-11-27-110918.jpg"
+                             alt="Аватар пользователя"
+                             style="width: 200px; height: 200px; border-radius: 50%; margin-top: 10px;" />
+                    </MudItem>
+                    <MudItem xs="12" sm="8">
+                        <MudText Typo="Typo.h5">Код Пользователя:</MudText>
+                        <MudText Typo="Typo.body1">@currentUser.Id</MudText>
+                        <MudText Typo="Typo.h5">Имя:</MudText>
+                        <MudText Typo="Typo.body1">@currentUser.FirstName</MudText>
+                        <MudText Typo="Typo.h5">Электронная Почта:</MudText>
+                        <MudText Typo="Typo.body1">@currentUser.Email</MudText>
+                        <MudText Typo="Typo.h5">Роль:</MudText>
+                        <MudText Typo="Typo.body1">@currentUser.Role</MudText>
+                    </MudItem>
+                </MudGrid>
+            }
+            else
+            {
+                <MudText Typo="Typo.body1">Пользователь не найден.</MudText>
+            }
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private UserSession currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var userClaims = authState.User;
+
+        if (userClaims.Identity.IsAuthenticated)
+        {
+            currentUser = new UserSession
+                {
+                    Id = userClaims.FindFirst(ClaimTypes.Sid)?.Value,
+                    Email = userClaims.FindFirst(ClaimTypes.Email)?.Value,
+                    FirstName = userClaims.FindFirst(ClaimTypes.Name)?.Value,
+                    Role = userClaims.FindFirst(ClaimTypes.Role)?.Value
+                };
+        }
+    }
+}

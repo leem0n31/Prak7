@@ -1,0 +1,39 @@
+﻿@page "/users"
+@using BlazorApp1.Models
+@using Microsoft.EntityFrameworkCore
+@inject LeemonContext context
+@using MudBlazor
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h3">Пользователи:</MudText>
+
+    <MudGrid>
+        @foreach (var user in users)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h5">Код Пользователя: @user.UserId</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardMedia Image="https://icdn.lenta.ru/images/2024/11/29/13/20241129132354457/square_320_36b8ae637c18b07c8681474f9243c736.jpg" Height="300" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.body1">Ник: @user.Username</MudText>
+                        <MudText Typo="Typo.body1">Электронная Почта: @user.Email</MudText>
+                        <MudText Typo="Typo.body1">Создано: @user.CreatedAt</MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private List<User> users = new List<User>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await context.Users.ToListAsync();
+    }
+}

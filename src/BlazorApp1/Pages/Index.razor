@@ -1,0 +1,38 @@
+﻿@page "/"
+
+@using BlazorApp1.Auth;
+@using BlazorApp1.Models;
+
+@inject LeemonContext context
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard>
+                <MudCardMedia Image="https://avatars.mds.yandex.net/get-kinopoisk-image/1946459/f3e6afaa-44f1-4edc-a073-ac7bea686659/1920x" Height="140" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h5" Align="Align.Center">Фильмы</MudText>
+                    <MudText Typo="Typo.body1" Align="Align.Center">Посмотрите фильмы.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudNavLink Href="Movies" Match="NavLinkMatch.All">Перейти</MudNavLink>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="4">
+            <MudCard>
+                <MudCardMedia Image="https://a.d-cd.net/gnwbJjFpna_8QpliwJ5maCtNp2Q-1920.jpg" Height="140" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h5" Align="Align.Center">Рейтинг</MudText>
+                    <MudText Typo="Typo.body1" Align="Align.Center">Посмотрите рейтинги фильмов.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudNavLink Href="Reviews" Match="NavLinkMatch.All">Перейти</MudNavLink>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+     
+    </MudGrid>
+</MudContainer>

@@ -1,0 +1,24 @@
+﻿@page "/Reviews"
+@using Microsoft.EntityFrameworkCore;
+@using BlazorApp1.Models;
+@inject LeemonContext context
+
+<h2>Оценка фильмов:</h2>
+
+@foreach (var review in reviews)
+{
+    <h3>ID фильма: @review.MovieId </h3>
+    <p>Рейтинг: @review.Rating</p>
+    <p>Описание: @review.ReviewText</p>
+    <hr />
+}
+
+@code {
+    private List<Review> reviews = new List<Review>();
+    protected override async Task OnInitializedAsync()
+    {
+        reviews = await context.Reviews.ToListAsync();
+    }
+
+
+}

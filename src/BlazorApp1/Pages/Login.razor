@@ -1,0 +1,62 @@
+﻿@page "/login"
+
+@using BlazorApp1.Auth;
+@using BlazorApp1.Models
+
+@inject LeemonContext Context
+@inject IJSRuntime js
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+
+<MudContainer MaxWidth="MaxWidth.Small">
+    <MudPaper Elevation="1" Class="pa-4">
+        <h3>Login</h3>
+
+        <MudForm>
+            <MudTextField @bind-Value="model.Email" Label="Email" Type="email" Required="true" />
+            <MudTextField @bind-Value="model.Password" Label="Password" Type="@passwordFieldType" Required="true"
+                          EndAdornmentIcon="@passwordIcon"
+                          OnClickEndAdornment="@TogglePasswordVisibility" />
+
+            <MudButton Type="submit" Color="Color.Primary" Variant="Variant.Filled" Class="mt-4" @onclick="Authenticate">Login</MudButton>
+        </MudForm>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private class Model
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    private Model model = new Model();
+    private bool isPasswordVisible = false;
+    private string passwordFieldType => isPasswordVisible ? "text" : "password";
+    private string passwordIcon => isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+
+    private void TogglePasswordVisibility()
+    {
+        isPasswordVisible = false;
+    }
+
+    private async Task Authenticate()
+    {
+        var userAccount = await Context.Login(model.Email, model.Password);
+        if (userAccount == null)
+        {
+            await js.InvokeVoidAsync("alert", "Invalid Colyaska");
+            return;
+        }
+
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationStateAsync(new UserSession
+            {
+                Id = userAccount.UserId.ToString(),
+                Email = userAccount.Email,
+                FirstName = userAccount.Username,
+                Role = userAccount.Role
+            });
+        navManager.NavigateTo("/", true);
+    }
+}

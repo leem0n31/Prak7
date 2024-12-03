@@ -1,0 +1,23 @@
+﻿@page "/Movies"
+@using Microsoft.EntityFrameworkCore;
+@using BlazorApp1.Models;
+@inject LeemonContext context
+
+<h2>Список фильмов:</h2>
+
+@foreach (var movie in movies)
+{
+    <h3>Фильм: @movie.Genre </h3>
+    <p>Описание: @movie.Title</p>
+    <hr />
+}
+
+@code {
+    private List<Movie> movies = new List<Movie>();
+    protected override async Task OnInitializedAsync()
+    {
+        movies = await context.Movies.ToListAsync();
+    }
+
+
+}
